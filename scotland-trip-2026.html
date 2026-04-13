@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Écosse — Août 2026</title>
+
+    <!-- Open Graph / WhatsApp preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Écosse — Août 2026">
+    <meta property="og:description" content="11 jours de randonnée en famille : Édimbourg, Glen Coe, Île de Skye, Glasgow. Les meilleurs sentiers des Highlands.">
+    <meta property="og:image" content="img/hero-loch-tummel.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Écosse — Août 2026">
+    <meta name="twitter:description" content="Randonnée en famille dans les Highlands écossais">
+    <meta name="twitter:image" content="img/hero-loch-tummel.jpg">
+    <meta name="description" content="11 jours de randonnée en famille : Édimbourg, Glen Coe, Île de Skye, Glasgow. Cartes topo interactives, programme jour par jour.">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+        :root {
+            --bg: #faf8f5;
+            --text: #2c2c2c;
+            --muted: #888;
+            --border: #e5e2dd;
+            --vert: #1a3a2a;
+            --pierre: #c9b99a;
+            --ciel: #4a7c9b;
+            --brume: #e8e4df;
+            --tourbe: #3d2b1f;
+            --loch: #2d5f7c;
+            --tartan: #8b2f3a;
+            --bruyere: #6b4c6e;
+            --facile: #3a8a5c;
+            --moyen: #c68a2e;
+            --sportif: #c0392b;
+            --topbar: 48px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.65;
+            font-size: 14px;
+        }
+
+        a { color: var(--ciel); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ===== TOPBAR ===== */
+        .topbar {
+            position: sticky; top: 0; z-index: 1000;
+            background: var(--vert);
+            color: var(--brume);
+            display: flex; align-items: center;
+            padding: 0 1rem;
+            height: var(--topbar);
+            gap: 1rem;
+        }
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            color: var(--pierre);
+            white-space: nowrap;
+        }
+        .topbar nav {
+            display: flex; gap: 0.2rem;
+            margin-left: auto;
+            overflow-x: auto;
+        }
+        .topbar nav a {
+            color: var(--brume);
+            font-size: 0.78rem;
+            padding: 0.3rem 0.65rem;
+            border-radius: 16px;
+            white-space: nowrap;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        .topbar nav a:hover,
+        .topbar nav a.active {
+            background: rgba(255,255,255,0.15);
+            text-decoration: none;
+        }
+
+        /* ===== LAYOUT ===== */
+        .layout {
+            display: flex;
+            min-height: calc(100vh - var(--topbar));
+        }
+        .map-pane {
+            width: 57%;
+            flex-shrink: 0;
+        }
+        .map-pane #map {
+            position: sticky;
+            top: var(--topbar);
+            height: calc(100vh - var(--topbar));
+        }
+        .content-pane {
+            width: 43%;
+            background: var(--bg);
+        }
+
+        /* ===== PANELS ===== */
+        .panel {
+            padding: 1.8rem 1.5rem;
+            min-height: 70vh;
+            border-bottom: 1px solid var(--border);
+        }
+        .panel:last-child { border-bottom: none; }
+
+        .panel-img {
+            width: 100%; height: 110px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* ===== HERO BANNER ===== */
+        .hero-banner {
+            position: relative;
+            height: 180px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+            background: url('img/hero-loch-tummel.jpg') center/cover no-repeat;
+        }
+        .hero-banner::before {
+            content: ''; position: absolute; inset: 0;
+            background: rgba(0,0,0,0.35);
+        }
+        .hero-banner * { position: relative; }
+        .hero-banner h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem; font-weight: 900;
+            line-height: 1.1; margin-bottom: 0.2rem;
+        }
+        .hero-banner p { font-weight: 300; font-size: 0.95rem; }
+        .hero-dates {
+            margin-top: 0.4rem;
+            border: 1.5px solid rgba(255,255,255,0.6);
+            padding: 0.25rem 1rem;
+            border-radius: 4px;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            backdrop-filter: blur(3px);
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* ===== FLIGHTS ===== */
+        .flights {
+            background: var(--tourbe);
+            color: var(--brume);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.2rem;
+            font-size: 0.82rem;
+            display: flex; flex-direction: column; gap: 0.3rem;
+        }
+        .flights strong { color: var(--pierre); }
+        .flights a { color: var(--pierre); }
+
+        /* ===== ROUTE ===== */
+        .route-steps {
+            display: flex; align-items: center; justify-content: center;
+            gap: 0.5rem; flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem; color: var(--vert);
+        }
+        .route-arrow { color: var(--tartan); font-size: 1.1rem; }
+
+        /* ===== SECTION HEADINGS ===== */
+        .panel h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem; font-weight: 700;
+            color: var(--vert);
+            margin-bottom: 0.6rem;
+        }
+        .panel h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.05rem; color: var(--vert);
+            margin: 1.3rem 0 0.6rem;
+        }
+        .etape {
+            display: inline-block;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ciel);
+            border: 1px solid var(--ciel);
+            padding: 0.15rem 0.6rem;
+            border-radius: 14px;
+            margin-bottom: 0.4rem;
+        }
+        .panel-dates {
+            font-size: 0.88rem;
+            color: var(--bruyere);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        .panel-intro {
+            font-size: 0.88rem;
+            font-weight: 300;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        /* ===== PROGRAMME ===== */
+        .prog { margin-bottom: 0.5rem; }
+        .prog-row {
+            display: grid;
+            grid-template-columns: 58px 1fr;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.82rem;
+            align-items: start;
+        }
+        .prog-row:last-child { border-bottom: none; }
+        .pdate {
+            font-weight: 600;
+            color: var(--vert);
+            white-space: nowrap;
+            font-size: 0.78rem;
+        }
+        .pact { color: #444; }
+        .pact b { color: var(--vert); font-weight: 600; }
+        .palt {
+            color: var(--muted);
+            font-size: 0.78rem;
+            margin-top: 0.15rem;
+        }
+        .ptag {
+            display: inline-block;
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 8px;
+            font-weight: 500;
+            vertical-align: middle;
+        }
+        .ptag.tous { background: #e8f5e9; color: #2e7d32; }
+        .ptag.ados { background: #fff3e0; color: #e65100; }
+        .ptag.gm { background: #f3e5f5; color: #6a1b9a; }
+
+        /* ===== WALK CARDS ===== */
+        .walk-grid { display: grid; gap: 0.7rem; }
+        .wcard {
+            background: #fff;
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .wcard:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+        }
+        .wcard[data-diff="facile"] { border-left-color: var(--facile); }
+        .wcard[data-diff="moyen"] { border-left-color: var(--moyen); }
+        .wcard[data-diff="sportif"] { border-left-color: var(--sportif); }
+
+        .wcard-head {
+            display: flex; align-items: center; gap: 0.4rem;
+            margin-bottom: 0.2rem; flex-wrap: wrap;
+        }
+        .wcard h4 {
+            font-size: 0.92rem; color: var(--vert);
+            margin: 0; flex: 1;
+        }
+        .wcard-stats {
+            font-size: 0.78rem; color: var(--muted);
+            font-variant-numeric: tabular-nums;
+            margin-bottom: 0.25rem;
+        }
+        .wcard-desc {
+            font-size: 0.82rem; color: #555;
+            font-weight: 300; line-height: 1.6;
+            margin-bottom: 0.3rem;
+        }
+        .wcard-link {
+            font-size: 0.75rem; font-weight: 500;
+        }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-block;
+            font-size: 0.6rem; font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            padding: 0.12rem 0.45rem;
+            border-radius: 8px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .badge.facile { background: var(--facile); }
+        .badge.moyen { background: var(--moyen); }
+        .badge.sportif { background: var(--sportif); }
+
+        .who {
+            font-size: 0.65rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .who.tous { background: #e8f5e9; color: #2e7d32; }
+        .who.ados { background: #fff3e0; color: #e65100; }
+
+        /* ===== OPTION NOTE ===== */
+        .option-note {
+            background: var(--brume);
+            border-radius: 6px;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.8rem;
+            color: #555;
+            font-weight: 300;
+            margin-top: 0.8rem;
+        }
+        .option-note b { font-weight: 600; color: var(--vert); }
+
+        /* ===== LODGING ===== */
+        .lodging-pick {
+            display: flex; gap: 0.8rem;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            margin-top: 0.5rem;
+            transition: transform 0.2s;
+        }
+        .lodging-pick:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.1); }
+        .lodging-pick a { display: flex; gap: 0.8rem; color: inherit; text-decoration: none; width: 100%; }
+        .lodging-pick img {
+            width: 100px; height: 80px;
+            object-fit: cover; flex-shrink: 0;
+        }
+        .lodging-pick .lp-body {
+            padding: 0.6rem 0.8rem 0.6rem 0;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .lodging-pick h4 { font-size: 0.88rem; color: var(--vert); margin-bottom: 0.15rem; }
+        .lodging-pick p { font-size: 0.78rem; color: var(--muted); font-weight: 300; }
+
+        /* ===== TIPS ===== */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.7rem;
+        }
+        .tip {
+            padding: 0.7rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+        .tip h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.88rem; color: var(--vert);
+            margin-bottom: 0.3rem;
+        }
+        .tip p { font-weight: 300; color: #555; line-height: 1.6; }
+        .tip a { color: var(--ciel); }
+
+        /* ===== LEGEND ===== */
+        .legend {
+            display: flex; gap: 0.8rem; flex-wrap: wrap;
+            font-size: 0.75rem; color: var(--muted);
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+
+        /* ===== FOOTER ===== */
+        .page-footer {
+            padding: 1.5rem;
+            background: var(--tourbe);
+            color: rgba(255,255,255,0.5);
+            font-size: 0.78rem;
+        }
+        .page-footer .tagline {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--pierre);
+            margin-bottom: 0.5rem;
+        }
+        .share-box {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-top: 0.8rem;
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .share-box:hover { background: rgba(255,255,255,0.12); }
+        .share-box .share-label {
+            font-weight: 600;
+            color: var(--pierre);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.3rem;
+        }
+        .share-toast {
+            display: none;
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            background: var(--vert); color: #fff;
+            padding: 0.5rem 1.2rem; border-radius: 20px;
+            font-size: 0.82rem; z-index: 9999;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .layout { flex-direction: column; }
+            .map-pane { width: 100%; }
+            .map-pane #map {
+                position: sticky;
+                top: var(--topbar);
+                height: 42vh;
+            }
+            .content-pane { width: 100%; }
+            .panel { padding: 1.3rem 1rem; min-height: auto; }
+            .hero-banner { height: 140px; }
+            .hero-banner h1 { font-size: 1.8rem; }
+            .tips-grid { grid-template-columns: 1fr; }
+            .lodging-pick img { width: 80px; height: 70px; }
+        }
+
+        @media (max-width: 480px) {
+            .topbar nav a { font-size: 0.72rem; padding: 0.25rem 0.5rem; }
+            .brand { font-size: 0.88rem; }
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            .topbar, .map-pane { display: none; }
+            .layout { display: block; }
+            .content-pane { width: 100%; }
+            .panel { break-inside: avoid; min-height: auto; }
+            .wcard { box-shadow: none; border: 1px solid #ddd; }
+        }
+
+        /* ===== LEAFLET OVERRIDES ===== */
+        .leaflet-popup-content { font-family: 'Inter', sans-serif; font-size: 12px; line-height: 1.5; }
+        .leaflet-popup-content strong { color: var(--vert); }
+    </style>
+</head>
+<body>
+
+<!-- ===== TOPBAR ===== -->
+<header class="topbar">
+    <span class="brand">Écosse — Août 2026</span>
+    <nav>
+        <a href="#pano" class="active">Itinéraire</a>
+        <a href="#edimbourg">Édimbourg</a>
+        <a href="#glencoe">Glen Coe</a>
+        <a href="#skye">Skye</a>
+        <a href="#glasgow">Glasgow</a>
+    </nav>
+</header>
+
+<!-- ===== LAYOUT ===== -->
+<div class="layout">
+
+    <!-- MAP PANE -->
+    <div class="map-pane">
+        <div id="map"></div>
+    </div>
+
+    <!-- CONTENT PANE -->
+    <div class="content-pane">
+
+        <!-- ===== OVERVIEW ===== -->
+        <section class="panel" id="pano" data-region="overview">
+            <div class="hero-banner">
+                <h1>Écosse</h1>
+                <p>Randonnée en famille</p>
+                <div class="hero-dates">10 &ndash; 21 août 2026</div>
+            </div>
+
+            <div class="flights">
+                <div><strong>Aller 10 août</strong> &mdash; GVA &rarr; EDI direct 2h25 &mdash; <a href="https://www.easyjet.com/en/cheap-flights/geneva/edinburgh" target="_blank">easyJet</a></div>
+                <div><strong>Retour 21 août</strong> &mdash; GLA &rarr; GVA direct 2h15 &mdash; <a href="https://www.easyjet.com/en/cheap-flights/glasgow/geneva" target="_blank">easyJet</a></div>
+            </div>
+
+            <div class="route-steps">
+                <span>Édimbourg</span>
+                <span class="route-arrow">&rarr;</span>
+                <span>Glen Coe</span>
+                <span class="route-arrow">&rarr;</span>
+                <span>Île de Skye</span>
+                <span class="route-arrow">&rarr;</span>
+                <span>Glasgow</span>
+            </div>
+
+            <h2>Programme jour par jour</h2>
+            <div class="legend">
+                <span><span class="badge facile">facile</span> tous</span>
+                <span><span class="badge moyen">moyen</span> bonne condition</span>
+                <span><span class="badge sportif">sportif</span> montagnards</span>
+            </div>
+
+            <div class="prog">
+                <div class="prog-row">
+                    <span class="pdate">Lun 10</span>
+                    <div><span class="pact">Vol GVA&rarr;EDI. Véhicule. <b>Arthur's Seat</b> en soirée.</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Mar 11</span>
+                    <div><span class="pact"><b>Pentland Hills</b> &mdash; 5 sommets (17 km, 960 m D+)</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Mer 12</span>
+                    <div><span class="pact">Château, Royal Mile, <b>Fringe Festival</b>.</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Jeu 13</span>
+                    <div><span class="pact">Route Glen Coe (2h30). <b>Lochan + Signal Rock</b>.</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Ven 14</span>
+                    <div><span class="pact"><b>Bidean nam Bian</b> &mdash; 2 Munros (14 km, 1385 m D+)</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Sam 15</span>
+                    <div><span class="pact"><b>Devil's Staircase</b> &mdash; col WHW (8 km A/R, 540 m D+)</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Dim 16</span>
+                    <div><span class="pact">Route Skye (2h). <b>Eilean Donan</b>. <b>Neist Point</b> sunset.</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Lun 17</span>
+                    <div><span class="pact"><b>Blà Bheinn</b> &mdash; Munro (8,2 km, 940 m D+). <b>Fairy Pools</b> l'après-midi.</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Mar 18</span>
+                    <div><span class="pact"><b>Quiraing</b> + <b>Old Man of Storr</b></span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Mer 19</span>
+                    <div><span class="pact">Route Glasgow (5h). <b>Kelvingrove</b> Museum.</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Jeu 20</span>
+                    <div><span class="pact">Glasgow : <b>Université</b>, Byres Road, repos.</span> <span class="ptag tous">tous</span></div>
+                </div>
+                <div class="prog-row">
+                    <span class="pdate">Ven 21</span>
+                    <div><span class="pact">Vol GLA &rarr; GVA</span> <span class="ptag tous">tous</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== ÉDIMBOURG ===== -->
+        <section class="panel" id="edimbourg" data-region="edinburgh">
+            <img class="panel-img" src="img/edinburgh-castle.jpg" alt="">
+            <span class="etape">Étape 1</span>
+            <h2>Édimbourg</h2>
+            <p class="panel-dates">10 &ndash; 12 août &bull; 3 nuits</p>
+            <p class="panel-intro">Pentland Hills au sud pour une mise en jambes sérieuse, Arthur's Seat en ville pour le panorama. Fringe Festival en août : spectacles gratuits dans les rues.</p>
+
+            <h3>Randonnées</h3>
+            <div class="walk-grid">
+                <div class="wcard" data-diff="moyen" onclick="showWalk('pentlands')">
+                    <div class="wcard-head">
+                        <h4>Pentland Hills &mdash; 5 sommets</h4>
+                        <span class="badge moyen">moyen</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">17 km &bull; 960 m D+ &bull; 4-5h</p>
+                    <p class="wcard-desc">Boucle depuis Threipmuir Reservoir (20 min en voiture). Turnhouse Hill, Carnethy Hill, <b>Scald Law (579 m)</b>, East &amp; West Kip. Terrain herbeux, passages raides. Vues sur le Firth of Forth.</p>
+                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/lothian/pentland-hills.shtml" target="_blank">Walkhighlands &rarr;</a>
+                </div>
+                <div class="wcard" data-diff="facile" onclick="showWalk('arthurs')">
+                    <div class="wcard-head">
+                        <h4>Arthur's Seat</h4>
+                        <span class="badge facile">facile</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">5 km &bull; 250 m D+ &bull; 1h30</p>
+                    <p class="wcard-desc">Volcan éteint, 251 m. Vue 360° sur la ville et la mer. Montée par Dunsapie Loch (douce) ou flanc sud (raide, 30 min). Soir d'arrivée idéal.</p>
+                </div>
+            </div>
+
+            <h3>Hébergement</h3>
+            <div class="lodging-pick">
+                <a href="https://grassmarkethotel.co.uk/rooms/" target="_blank">
+                    <img src="img/lodging-grassmarket-hotel.jpg" alt="">
+                    <div class="lp-body">
+                        <h4>The Grassmarket Hotel</h4>
+                        <p>Au pied du château. Chambres famille. Petit-déjeuner inclus.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== GLEN COE ===== -->
+        <section class="panel" id="glencoe" data-region="glencoe">
+            <img class="panel-img" src="img/glencoe-valley.jpg" alt="">
+            <span class="etape">Étape 2</span>
+            <h2>Glen Coe &amp; les Highlands</h2>
+            <p class="panel-dates">13 &ndash; 16 août &bull; 3 nuits</p>
+            <p class="panel-intro">Vallée glaciaire au cœur des Highlands. Le plus beau terrain de randonnée d'Écosse. Sentiers pour tous : des balades en forêt aux arêtes de Munros.</p>
+
+            <h3>Randonnées</h3>
+            <div class="walk-grid">
+                <div class="wcard" data-diff="sportif" onclick="showWalk('bidean')">
+                    <div class="wcard-head">
+                        <h4>Bidean nam Bian</h4>
+                        <span class="badge sportif">sportif</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">14 km &bull; 1385 m D+ &bull; 6-7h</p>
+                    <p class="wcard-desc">Point culminant d'Argyll (1150 m). <b>2 Munros.</b> Montée par la Lost Valley, crête vers Bidean, descente par Stob Coire nan Lochan. Pierriers, scramble facile. Carte et boussole indispensables.</p>
+                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/fortwilliam/bideannambian.shtml" target="_blank">Walkhighlands &rarr;</a>
+                </div>
+                <div class="wcard" data-diff="moyen" onclick="showWalk('devils')">
+                    <div class="wcard-head">
+                        <h4>Devil's Staircase &mdash; WHW</h4>
+                        <span class="badge moyen">moyen</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">8 km A/R au col &bull; 540 m D+ &bull; 3-4h</p>
+                    <p class="wcard-desc">Col à 550 m, point culminant du West Highland Way. <b>Vue sur le Ben Nevis et Buachaille Etive Mòr.</b> Bon sentier balisé. Aller-retour depuis Kingshouse, ou traversée complète vers Kinlochleven (14,5 km).</p>
+                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/fortwilliam/kingshouse-kinlochleven.shtml" target="_blank">Walkhighlands &rarr;</a>
+                </div>
+                <div class="wcard" data-diff="moyen" onclick="showWalk('lost-valley')">
+                    <div class="wcard-head">
+                        <h4>Lost Valley (Coire Gabhail)</h4>
+                        <span class="badge moyen">moyen</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">4 km &bull; 335 m D+ &bull; 2-3h</p>
+                    <p class="wcard-desc">Vallée cachée entre les Three Sisters. Sentier raide et rocheux, scramble léger, puis vallée suspendue spectaculaire. Court mais intense.</p>
+                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/fortwilliam/lostvalley.shtml" target="_blank">Walkhighlands &rarr;</a>
+                </div>
+                <div class="wcard" data-diff="facile" onclick="showWalk('lochan')">
+                    <div class="wcard-head">
+                        <h4>Glencoe Lochan + Signal Rock</h4>
+                        <span class="badge facile">facile</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">5 km &bull; 50 m D+ &bull; 1h30</p>
+                    <p class="wcard-desc">Boucle autour du lac en forêt + sentier vers Signal Rock le long de la rivière Coe. Bancs, plat. Balade familiale, fin de journée, ou jour de repos.</p>
+                </div>
+            </div>
+
+            <div class="option-note">
+                <b>Option :</b> <b>Buachaille Etive Mòr</b> (13 km, 1110 m D+, 7-9h, 2 Munros) &mdash; la montagne la plus photographiée d'Écosse. Alternative à Bidean pour une 2e journée sportive.
+                <a href="https://www.walkhighlands.co.uk/fortwilliam/buachailleetivemor.shtml" target="_blank">Walkhighlands &rarr;</a>
+            </div>
+
+            <h3>Hébergement</h3>
+            <div class="lodging-pick">
+                <a href="https://www.ardnohouse.co.uk/" target="_blank">
+                    <img src="img/lodging-ardno-house.jpg" alt="">
+                    <div class="lp-body">
+                        <h4>Ardno House B&amp;B &mdash; Glencoe</h4>
+                        <p>Séchoir randonneurs. Petit-déjeuner. Vue montagnes. Départ sentiers à pied.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== ÎLE DE SKYE ===== -->
+        <section class="panel" id="skye" data-region="skye">
+            <img class="panel-img" src="img/quiraing.jpg" alt="">
+            <span class="etape">Étape 3</span>
+            <h2>Île de Skye</h2>
+            <p class="panel-dates">16 &ndash; 19 août &bull; 3 nuits</p>
+            <p class="panel-intro">Formations rocheuses spectaculaires, piscines turquoise, falaises maritimes. Arrêt Eilean Donan Castle sur le trajet. Haute saison : partir tôt le matin.</p>
+
+            <h3>Randonnées</h3>
+            <div class="walk-grid">
+                <div class="wcard" data-diff="sportif" onclick="showWalk('blabheinn')">
+                    <div class="wcard-head">
+                        <h4>Blà Bheinn (Blaven)</h4>
+                        <span class="badge sportif">sportif</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">8,2 km &bull; 940 m D+ &bull; 5-6h</p>
+                    <p class="wcard-desc"><b>Munro isolé (928 m), le plus accessible des Cuillin.</b> Vue exceptionnelle sur toute la crête des Cuillin noirs et Loch Slapin. Bon sentier puis pierrier raide, scramble léger au sommet.</p>
+                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/blabheinn.shtml" target="_blank">Walkhighlands &rarr;</a>
+                </div>
+                <div class="wcard" data-diff="moyen" onclick="showWalk('quiraing')">
+                    <div class="wcard-head">
+                        <h4>Quiraing &mdash; boucle</h4>
+                        <span class="badge moyen">moyen</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">6,8 km &bull; 380 m D+ &bull; 2h30-3h</p>
+                    <p class="wcard-desc">Le plus grand glissement de terrain d'Europe. Paysage lunaire : aiguilles, plateaux cachés (The Table, The Prison, The Needle). Sentier bien tracé.</p>
+                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/quiraing.shtml" target="_blank">Walkhighlands &rarr;</a>
+                </div>
+                <div class="wcard" data-diff="facile" onclick="showWalk('storr')">
+                    <div class="wcard-head">
+                        <h4>Old Man of Storr</h4>
+                        <span class="badge facile">facile</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">3,7 km A/R &bull; 300 m D+ &bull; 1h30</p>
+                    <p class="wcard-desc">Aiguille rocheuse la plus connue de Skye (48 m). Panorama 360° sur l'île et les Hébrides. Sentier aménagé. Combinable avec le Quiraing (30 min de route).</p>
+                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/oldmanofstorr.shtml" target="_blank">Walkhighlands &rarr;</a>
+                </div>
+                <div class="wcard" data-diff="facile" onclick="showWalk('fairy-pools')">
+                    <div class="wcard-head">
+                        <h4>Fairy Pools</h4>
+                        <span class="badge facile">facile</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">2,4 km A/R &bull; plat &bull; 1h</p>
+                    <p class="wcard-desc">Piscines naturelles turquoise au pied des Cuillin. Baignade possible (~12°C). Arriver avant 9h en août.</p>
+                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/fairy-pools.shtml" target="_blank">Walkhighlands &rarr;</a>
+                </div>
+                <div class="wcard" data-diff="facile" onclick="showWalk('neist')">
+                    <div class="wcard-head">
+                        <h4>Neist Point</h4>
+                        <span class="badge facile">facile</span>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">2,8 km A/R &bull; 100 m D+ &bull; 1h</p>
+                    <p class="wcard-desc">Phare à la pointe ouest de Skye. Escaliers et sentier côtier. Coucher de soleil exceptionnel (jour jusqu'à 21h en août). Phoques et dauphins possibles.</p>
+                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/neist-point.shtml" target="_blank">Walkhighlands &rarr;</a>
+                </div>
+            </div>
+
+            <h3>Hébergement</h3>
+            <div class="lodging-pick">
+                <a href="https://www.stratheyrecottage.co.uk/" target="_blank">
+                    <img src="img/lodging-stratheyre.jpg" alt="">
+                    <div class="lp-body">
+                        <h4>Stratheyre Cottage &mdash; Portree</h4>
+                        <p>Cottage pierre, 3 chambres, poêle à bois, vue mer. 5 min de Portree.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== GLASGOW ===== -->
+        <section class="panel" id="glasgow" data-region="glasgow">
+            <img class="panel-img" src="img/glasgow-uni.jpg" alt="">
+            <span class="etape">Étape 4</span>
+            <h2>Glasgow</h2>
+            <p class="panel-dates">19 &ndash; 21 août &bull; 2 nuits</p>
+            <p class="panel-intro">Musées gratuits, architecture victorienne, quartier West End. Restitution du véhicule à l'arrivée.</p>
+
+            <h3>À voir</h3>
+            <div class="walk-grid">
+                <div class="wcard" data-diff="facile" onclick="showWalk('kelvingrove')">
+                    <div class="wcard-head">
+                        <h4>Kelvingrove Museum</h4>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">Gratuit &bull; 2-3h</p>
+                    <p class="wcard-desc">22 galeries : Dalí, Rembrandt, fossiles, armures. Spitfire suspendu au plafond. Orgue joué à 13h. Un des meilleurs musées gratuits de Grande-Bretagne.</p>
+                </div>
+                <div class="wcard" data-diff="facile" onclick="showWalk('university')">
+                    <div class="wcard-head">
+                        <h4>Kelvingrove Park + Université</h4>
+                        <span class="who tous">tous</span>
+                    </div>
+                    <p class="wcard-stats">3 km &bull; plat &bull; 1h</p>
+                    <p class="wcard-desc">Promenade le long de la rivière Kelvin. Université de Glasgow : bâtiment néo-gothique 1870, évoque Poudlard. Jardin botanique à proximité.</p>
+                </div>
+            </div>
+
+            <h3>Hébergement</h3>
+            <div class="lodging-pick">
+                <a href="https://www.alamoguesthouse.com" target="_blank">
+                    <img src="img/lodging-alamo.jpg" alt="">
+                    <div class="lp-body">
+                        <h4>The Alamo Guest House</h4>
+                        <p>B&amp;B de caractère, West End. Petit-déjeuner. À pied de Kelvingrove.</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===== INFOS PRATIQUES ===== -->
+        <section class="panel" id="infos" data-region="overview">
+            <h2>Infos pratiques</h2>
+            <div class="tips-grid">
+                <div class="tip">
+                    <h4>Véhicule</h4>
+                    <p>Location Édimbourg, restitution Glasgow. Conduite à gauche. Routes Highlands souvent à voie unique avec passing places.<br>
+                    EDI &rarr; Glen Coe : 2h30<br>
+                    Glen Coe &rarr; Skye : 2h<br>
+                    Skye &rarr; Glasgow : 5h</p>
+                </div>
+                <div class="tip">
+                    <h4>Météo août</h4>
+                    <p>12-18°C. Pluie fréquente. Vêtements imperméables indispensables. Jour jusqu'à 21h environ. Midges (moucherons) dans les Highlands : répulsif Smidge.</p>
+                </div>
+                <div class="tip">
+                    <h4>Cartographie</h4>
+                    <p>Équivalent IGN : <b>Ordnance Survey</b>. Même échelle, courbes de niveau.<br>
+                    <a href="https://explore.osmaps.com/" target="_blank">OS Maps</a> &mdash; consultation en ligne.<br>
+                    <a href="https://www.walkhighlands.co.uk/" target="_blank">Walkhighlands</a> &mdash; fiches et traces GPS.</p>
+                </div>
+                <div class="tip">
+                    <h4>Budget indicatif</h4>
+                    <p>Hébergement : 150-300&pound;/nuit<br>
+                    Location véhicule 11j : 500-700&pound;<br>
+                    Carburant : ~150&pound;<br>
+                    Alimentation : 60-100&pound;/jour (4 pers.)<br>
+                    Entrées : musées gratuits, châteaux ~20&pound;/adulte</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="page-footer">
+            <p class="tagline">Écosse &mdash; Août 2026</p>
+            <p>Projet de voyage familial &mdash; Cartes <a href="https://opentopomap.org" target="_blank" style="color:var(--pierre)">OpenTopoMap</a></p>
+            <div class="share-box" onclick="copyShare()" title="Cliquer pour copier">
+                <div class="share-label">Copier pour WhatsApp / email</div>
+                Écosse &mdash; 10-21 août 2026<br>
+                11 jours de randonnée en famille<br>
+                Édimbourg &rarr; Glen Coe &rarr; Île de Skye &rarr; Glasgow<br>
+                Ouvre le fichier pour voir l'itinéraire complet avec cartes topo interactives.
+            </div>
+        </footer>
+        <div class="share-toast" id="toast">Copié !</div>
+
+    </div><!-- /content-pane -->
+</div><!-- /layout -->
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function() {
+    // === Tile layer ===
+    function topo() {
+        return L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 17,
+            attribution: '<a href="https://opentopomap.org">OpenTopoMap</a> | Données: OSM'
+        });
+    }
+
+    // === Map init ===
+    var map = L.map('map', { scrollWheelZoom: true, zoomControl: true }).setView([56.55, -4.9], 7);
+    topo().addTo(map);
+
+    // === Marker helpers ===
+    var markers = {};
+
+    function poi(lat, lng, color, radius, popup) {
+        var m = L.circleMarker([lat, lng], {
+            radius: radius, fillColor: color, color: '#fff',
+            weight: 2, opacity: 1, fillOpacity: 0.9
+        });
+        if (popup) m.bindPopup(popup);
+        return m;
+    }
+
+    function dot(id, lat, lng, color, radius, popup) {
+        var m = poi(lat, lng, color, radius, popup);
+        markers[id] = m;
+        return m;
+    }
+
+    function driveLabel(lat, lng, text) {
+        return L.marker([lat, lng], {
+            icon: L.divIcon({
+                className: '',
+                html: '<div style="background:rgba(139,47,58,0.85);color:#fff;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap;font-family:Inter,sans-serif;">' + text + '</div>',
+                iconSize: [0,0], iconAnchor: [-5, 10]
+            })
+        });
+    }
+
+    // === Region views ===
+    var views = {
+        overview:  { center: [56.55, -4.9], zoom: 7 },
+        edinburgh: { center: [55.88, -3.24], zoom: 12 },
+        glencoe:   { center: [56.668, -5.02], zoom: 12 },
+        skye:      { center: [57.38, -6.30], zoom: 10 },
+        glasgow:   { center: [55.868, -4.290], zoom: 14 }
+    };
+
+    // === OVERVIEW layer ===
+    var routeLine = L.polyline([
+        [55.9533, -3.1883], [56.3167, -3.9167], [56.6833, -5.0333],
+        [57.2743, -5.5164], [57.4125, -6.1950], [56.4500, -5.4500],
+        [55.8642, -4.2518]
+    ], { color: '#8b2f3a', weight: 3, opacity: 0.7, dashArray: '8,6' });
+
+    var overviewLayer = L.layerGroup([
+        routeLine,
+        poi(55.9533, -3.1883, '#c9b99a', 10, '<strong>ÉDIMBOURG</strong><br>10-12 août · 3 nuits<br><em>Vol GVA→EDI 2h25</em>'),
+        poi(56.6833, -5.0333, '#3a8a5c', 10, '<strong>GLEN COE</strong><br>13-16 août · 3 nuits<br><em>2h30 depuis Édimbourg</em>'),
+        poi(57.2743, -5.5164, '#c68a2e', 6, '<strong>Eilean Donan Castle</strong><br>Arrêt sur la route vers Skye'),
+        poi(57.4125, -6.1950, '#4a7c9b', 10, '<strong>ÎLE DE SKYE</strong><br>16-19 août · 3 nuits<br><em>2h depuis Glen Coe</em>'),
+        poi(55.8642, -4.2518, '#6b4c6e', 10, '<strong>GLASGOW</strong><br>19-21 août · 2 nuits<br><em>Vol GLA→GVA 2h15</em>'),
+        driveLabel(56.30, -4.05, '2h30'),
+        driveLabel(57.00, -5.25, '2h'),
+        driveLabel(56.40, -5.65, '5h')
+    ]);
+
+    // === EDINBURGH layer ===
+    var edinburghLayer = L.layerGroup([
+        dot('pentlands', 55.855, -3.270, '#c68a2e', 9, '<strong>Pentland Hills — 5 sommets</strong><br>17 km, 960 m D+, 4-5h<br><span style="color:#c68a2e">Moyen</span> · Tout le monde<br>Scald Law (579 m). Départ Threipmuir.'),
+        dot('arthurs', 55.9442, -3.1618, '#3a8a5c', 7, '<strong>Arthur\'s Seat</strong><br>5 km, 250 m D+, 1h30<br><span style="color:#3a8a5c">Facile</span> · Tout le monde<br>Volcan éteint, 251 m. Panorama.'),
+        poi(55.9486, -3.1999, '#8b2f3a', 5, '<strong>Château d\'Édimbourg</strong><br>Visite jour 2'),
+        poi(55.9510, -3.1900, '#6b4c6e', 4, 'Royal Mile'),
+        poi(55.9472, -3.1968, '#6b4c6e', 4, 'Grassmarket'),
+        poi(55.858, -3.259, '#c68a2e', 5, 'Scald Law (579 m)'),
+        L.polyline([[55.867,-3.264],[55.8625,-3.2535],[55.8555,-3.2450],[55.853,-3.259],[55.851,-3.270],[55.8495,-3.278],[55.853,-3.285],[55.860,-3.280],[55.867,-3.264]], {color:'#c68a2e',weight:2.5,opacity:0.6})
+    ]);
+
+    // === GLEN COE layer ===
+    var glencoeLayer = L.layerGroup([
+        dot('bidean', 56.6498, -5.0233, '#c0392b', 9, '<strong>Bidean nam Bian (1150 m)</strong><br>14 km, 1385 m D+, 6-7h<br><span style="color:#c0392b">Sportif</span> · Tout le monde<br>2 Munros. Course reine de Glen Coe.'),
+        dot('devils', 56.6863, -5.0042, '#c68a2e', 8, '<strong>Devil\'s Staircase (550 m)</strong><br>8 km A/R, 540 m D+, 3-4h<br><span style="color:#c68a2e">Moyen</span> · Tout le monde<br>Col panoramique du WHW.'),
+        dot('lost-valley', 56.658, -5.025, '#c68a2e', 7, '<strong>Lost Valley (Coire Gabhail)</strong><br>4 km, 335 m D+, 2-3h<br><span style="color:#c68a2e">Moyen</span> · Tout le monde<br>Vallée cachée des MacDonald.'),
+        dot('lochan', 56.6867, -5.0989, '#3a8a5c', 6, '<strong>Glencoe Lochan + Signal Rock</strong><br>5 km, 50 m D+, 1h30<br><span style="color:#3a8a5c">Facile</span> · Tout le monde<br>Forêt, lac, balade familiale.'),
+        poi(56.6521, -4.9583, '#8b2f3a', 6, '<strong>Buachaille Etive Mòr (1022 m)</strong><br>Option : 13 km, 1110 m D+, 2 Munros'),
+        poi(56.6889, -5.1089, '#6b4c6e', 4, 'Glencoe Village'),
+        L.polyline([[56.668,-5.035],[56.662,-5.030],[56.658,-5.025],[56.653,-5.040],[56.6498,-5.0233],[56.656,-5.014],[56.662,-5.020],[56.668,-5.035]], {color:'#c0392b',weight:2.5,opacity:0.5}),
+        L.polyline([[56.656,-4.970],[56.670,-4.980],[56.680,-4.995],[56.6863,-5.004],[56.688,-5.030],[56.688,-5.056]], {color:'#c68a2e',weight:2,opacity:0.5,dashArray:'5,5'})
+    ]);
+
+    // === SKYE layer ===
+    var skyeLayer = L.layerGroup([
+        dot('blabheinn', 57.230, -6.160, '#c0392b', 9, '<strong>Blà Bheinn (928 m)</strong><br>8,2 km, 940 m D+, 5-6h<br><span style="color:#c0392b">Sportif</span> · Tout le monde<br>Munro isolé, vue sur les Cuillin.'),
+        dot('quiraing', 57.6417, -6.2756, '#c68a2e', 8, '<strong>Quiraing</strong><br>6,8 km, 380 m D+, 2h30<br><span style="color:#c68a2e">Moyen</span> · Tout le monde<br>Glissement de terrain, paysage lunaire.'),
+        dot('storr', 57.5072, -6.1831, '#3a8a5c', 7, '<strong>Old Man of Storr</strong><br>3,7 km, 300 m D+, 1h30<br><span style="color:#3a8a5c">Facile</span> · Tout le monde<br>Aiguille iconique de Skye.'),
+        dot('fairy-pools', 57.2497, -6.2861, '#3a8a5c', 7, '<strong>Fairy Pools</strong><br>2,4 km, plat, 1h<br><span style="color:#3a8a5c">Facile</span> · Tout le monde<br>Piscines turquoise. Baignade.'),
+        dot('neist', 57.4231, -6.7881, '#3a8a5c', 7, '<strong>Neist Point</strong><br>2,8 km, 100 m D+, 1h<br><span style="color:#3a8a5c">Facile</span> · Tout le monde<br>Phare, coucher de soleil.'),
+        poi(57.4125, -6.1950, '#6b4c6e', 5, 'Portree — base de séjour'),
+        poi(57.2743, -5.5164, '#8b2f3a', 6, '<strong>Eilean Donan Castle</strong><br>Arrêt sur la route, XIIIe siècle'),
+        L.polyline([[57.238,-6.150],[57.235,-6.155],[57.233,-6.158],[57.230,-6.160]], {color:'#c0392b',weight:2.5,opacity:0.6})
+    ]);
+
+    // === GLASGOW layer ===
+    var glasgowLayer = L.layerGroup([
+        dot('kelvingrove', 55.8686, -4.2886, '#4a7c9b', 7, '<strong>Kelvingrove Museum</strong><br>Gratuit · 2-3h · 22 galeries'),
+        dot('university', 55.8722, -4.2883, '#c68a2e', 6, '<strong>Université de Glasgow</strong><br>Néo-gothique 1870. «Poudlard».'),
+        poi(55.8653, -4.3064, '#4a7c9b', 5, 'Riverside Museum — Gratuit'),
+        poi(55.8660, -4.2690, '#6b4c6e', 5, 'Byres Road — Restos &amp; cafés'),
+        poi(55.8585, -4.2586, '#6b4c6e', 4, 'Glasgow Cathedral')
+    ]);
+
+    // === Region index ===
+    var layers = {
+        overview: overviewLayer,
+        edinburgh: edinburghLayer,
+        glencoe: glencoeLayer,
+        skye: skyeLayer,
+        glasgow: glasgowLayer
+    };
+
+    // Start with overview
+    var activeRegion = 'overview';
+    overviewLayer.addTo(map);
+
+    // === Switch region ===
+    function switchTo(region) {
+        if (region === activeRegion || !layers[region]) return;
+        layers[activeRegion].removeFrom(map);
+        layers[region].addTo(map);
+        map.flyTo(views[region].center, views[region].zoom, { duration: 1.2 });
+        activeRegion = region;
+
+        // Update nav
+        document.querySelectorAll('.topbar nav a').forEach(function(a) {
+            var href = a.getAttribute('href').replace('#', '');
+            var regionMap = { pano: 'overview', edimbourg: 'edinburgh', glencoe: 'glencoe', skye: 'skye', glasgow: 'glasgow', infos: 'overview' };
+            a.classList.toggle('active', regionMap[href] === region);
+        });
+    }
+
+    // === Scroll detection ===
+    var panels = document.querySelectorAll('.panel[data-region]');
+    var regionMap = { pano: 'overview', edimbourg: 'edinburgh', glencoe: 'glencoe', skye: 'skye', glasgow: 'glasgow', infos: 'overview' };
+    var ticking = false;
+
+    function onScroll() {
+        var best = null, bestArea = 0;
+        panels.forEach(function(p) {
+            var r = p.getBoundingClientRect();
+            var top = Math.max(r.top, 0);
+            var bot = Math.min(r.bottom, window.innerHeight);
+            var area = Math.max(0, bot - top);
+            if (area > bestArea) {
+                bestArea = area;
+                best = p.dataset.region;
+            }
+        });
+        if (best && best !== activeRegion) switchTo(best);
+    }
+
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            requestAnimationFrame(function() { onScroll(); ticking = false; });
+            ticking = true;
+        }
+    }, { passive: true });
+
+    // === Nav click: scroll content ===
+    document.querySelectorAll('.topbar nav a').forEach(function(a) {
+        a.addEventListener('click', function(e) {
+            e.preventDefault();
+            var id = this.getAttribute('href').replace('#', '');
+            var el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // === Walk card click ===
+    window.showWalk = function(id) {
+        if (!markers[id]) return;
+        var ll = markers[id].getLatLng();
+        map.flyTo(ll, 14, { duration: 0.8 });
+        setTimeout(function() { markers[id].openPopup(); }, 900);
+
+        // On mobile, scroll map into view
+        if (window.innerWidth <= 900) {
+            document.querySelector('.map-pane').scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    // === Share copy ===
+    window.copyShare = function() {
+        var text = 'Écosse — 10-21 août 2026\n11 jours de randonnée en famille\nÉdimbourg → Glen Coe → Île de Skye → Glasgow\nOuvre le fichier pour voir l\'itinéraire complet avec cartes topo interactives.';
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text);
+        } else {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+        var toast = document.getElementById('toast');
+        toast.style.display = 'block';
+        setTimeout(function() { toast.style.display = 'none'; }, 1500);
+    };
+
+    // Initial scroll check
+    setTimeout(onScroll, 500);
+})();
+</script>
+</body>
+</html>
