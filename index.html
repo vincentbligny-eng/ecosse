@@ -384,6 +384,30 @@
             align-items: center;
         }
 
+        /* ===== FEEDBACK BUTTONS ===== */
+        .feedback-buttons {
+            display: flex; flex-direction: column; gap: 0.6rem;
+        }
+        .feedback-btn {
+            display: flex; align-items: center; gap: 0.6rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: #fff;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .feedback-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: #fff;
+        }
+        .feedback-btn.wa { background: #25D366; }
+        .feedback-btn.em { background: var(--ciel); }
+        .fb-icon { font-size: 1.3rem; }
+
         /* ===== FOOTER ===== */
         .page-footer {
             padding: 1.5rem;
@@ -828,27 +852,20 @@
             </div>
         </section>
 
-        <!-- ===== COMMENTS ===== -->
+        <!-- ===== AVIS ===== -->
         <section class="panel" id="commentaires" data-region="overview">
-            <h2>Suggestions de la famille</h2>
-            <p class="panel-intro">Un avis sur l'itinéraire, un hébergement, une rando ? Connectez-vous avec GitHub pour commenter.</p>
-            <div class="giscus"></div>
-            <script src="https://giscus.app/client.js"
-                data-repo="vincentbligny-eng/ecosse"
-                data-repo-id="R_kgDOSBV19w"
-                data-category="General"
-                data-category-id="DIC_kwDOSBV1984C6vX2"
-                data-mapping="specific"
-                data-term="Suggestions pour le voyage"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="top"
-                data-theme="light"
-                data-lang="fr"
-                crossorigin="anonymous"
-                async>
-            </script>
+            <h2>Donner ton avis</h2>
+            <p class="panel-intro">Une suggestion sur l'itinéraire, un hébergement, une rando ? Envoie-nous ton avis en un clic.</p>
+            <div class="feedback-buttons">
+                <a class="feedback-btn wa" href="https://wa.me/?text=Écosse%20août%202026%20—%20Mon%20avis%20%3A%0A%0A" target="_blank">
+                    <span class="fb-icon">&#9993;</span>
+                    Envoyer par WhatsApp
+                </a>
+                <a class="feedback-btn em" href="mailto:?subject=Écosse%20août%202026%20—%20Suggestion&amp;body=Mon%20avis%20sur%20le%20voyage%20%3A%0A%0A" target="_blank">
+                    <span class="fb-icon">&#9993;</span>
+                    Envoyer par email
+                </a>
+            </div>
         </section>
 
         <!-- ===== FOOTER ===== -->
