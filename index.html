@@ -296,6 +296,56 @@
         .wcard-link {
             font-size: 0.75rem; font-weight: 500;
         }
+        details.wcard summary { list-style: none; cursor: pointer; }
+        details.wcard summary::-webkit-details-marker { display: none; }
+        details.wcard { position: relative; }
+        details.wcard summary::after {
+            content: '+'; position: absolute; right: 0.8rem; top: 0.8rem;
+            font-size: 1.1rem; font-weight: 300; color: #bbb;
+            transition: transform 0.2s;
+        }
+        details.wcard[open] summary::after { content: '\2212'; }
+        .wcard-detail {
+            padding-top: 0.7rem; margin-top: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+        .wcard-photo {
+            width: 100%; height: 150px;
+            object-fit: cover; border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+        .wcard-detail > p {
+            font-size: 0.82rem; color: #555;
+            font-weight: 300; line-height: 1.7;
+            margin-bottom: 0.4rem;
+        }
+        .wcard-tips {
+            background: var(--brume); padding: 0.5rem 0.7rem;
+            border-radius: 6px; font-size: 0.78rem; color: #666;
+            margin: 0.5rem 0; line-height: 1.7;
+        }
+        .wcard-tips b { color: var(--vert); font-weight: 600; }
+        .panel-photos {
+            display: flex; gap: 0.4rem; margin-bottom: 1rem;
+        }
+        .panel-photos img {
+            flex: 1; min-width: 0; height: 90px;
+            object-fit: cover; border-radius: 6px;
+        }
+        .lodging-grid { display: grid; gap: 0.8rem; }
+        .lodging-card {
+            background: #fff; border-radius: 10px; overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.2s;
+        }
+        .lodging-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+        .lodging-card a { display: block; text-decoration: none; color: inherit; }
+        .lodging-card img { width: 100%; height: 130px; object-fit: cover; }
+        .lc-body { padding: 0.7rem 0.9rem; }
+        .lc-body h4 { font-size: 0.9rem; color: var(--vert); margin-bottom: 0.15rem; }
+        .lc-type { font-size: 0.72rem; color: var(--bruyere); font-weight: 500; margin-bottom: 0.25rem; }
+        .lc-desc { font-size: 0.78rem; color: #666; font-weight: 300; line-height: 1.6; margin-bottom: 0.3rem; }
+        .lc-cta { font-size: 0.75rem; font-weight: 600; color: var(--ciel); }
 
         /* ===== BADGES ===== */
         .badge {
@@ -597,50 +647,103 @@
 
         <!-- ===== ÉDIMBOURG ===== -->
         <section class="panel" id="edimbourg" data-region="edinburgh">
-            <img class="panel-img" src="img/edinburgh-castle.jpg" alt="">
+            <div class="panel-photos">
+                <img src="img/edinburgh-castle.jpg" alt="">
+                <img src="img/royal-mile.jpg" alt="">
+                <img src="img/arthurs-seat.jpg" alt="">
+            </div>
             <span class="etape">Étape 1</span>
             <h2>Édimbourg</h2>
             <p class="panel-dates">10 &ndash; 12 août &bull; 3 nuits</p>
-            <p class="panel-intro">Pentland Hills au sud pour une mise en jambes sérieuse, Arthur's Seat en ville pour le panorama. Fringe Festival en août : spectacles gratuits dans les rues.</p>
+            <p class="panel-intro">Pentland Hills au sud pour une mise en jambes sérieuse, Arthur's Seat en ville pour le panorama. Fringe Festival en août : spectacles gratuits dans les rues. Jardins botaniques royaux (gratuit, 28 hectares).</p>
 
             <h3>Randonnées</h3>
             <div class="walk-grid">
-                <div class="wcard" data-diff="moyen" onclick="showWalk('pentlands')">
-                    <div class="wcard-head">
-                        <h4>Pentland Hills &mdash; 5 sommets</h4>
-                        <span class="badge moyen">moyen</span>
-                        <span class="who tous">tous</span>
+                <details class="wcard" data-diff="moyen">
+                    <summary onclick="showWalk('pentlands')">
+                        <div class="wcard-head">
+                            <h4>Pentland Hills &mdash; 5 sommets</h4>
+                            <span class="badge moyen">moyen</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">17 km &bull; 960 m D+ &bull; 4-5h</p>
+                        <p class="wcard-desc">Boucle des 5 sommets depuis Threipmuir. Scald Law (579 m), point culminant. Mise en jambes idéale.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <p>La chaîne de collines au sud d'Édimbourg, paradis des randonneurs locaux. Départ du Threipmuir Reservoir (parking gratuit, 20 min en voiture). On enchaîne <b>Turnhouse Hill</b> (506 m), <b>Carnethy Hill</b> (573 m), <b>Scald Law</b> (579 m, point culminant), puis <b>East Kip</b> et <b>West Kip</b>. Terrain herbeux avec quelques passages raides et boueux après la pluie. Aucune difficulté technique. Vues spectaculaires sur le Firth of Forth au nord et les Borders au sud. Peu de monde comparé aux Highlands.</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Threipmuir Reservoir, 20 min d'Édimbourg. Gratuit.<br>
+                            <b>Terrain :</b> Herbeux, passages raides, boueux par temps humide.<br>
+                            <b>À prévoir :</b> Eau et pique-nique. Pas d'abri ni de ravitaillement sur le parcours.
+                        </div>
+                        <a class="wcard-link" href="https://www.walkhighlands.co.uk/lothian/pentland-hills.shtml" target="_blank">Walkhighlands &rarr;</a>
                     </div>
-                    <p class="wcard-stats">17 km &bull; 960 m D+ &bull; 4-5h</p>
-                    <p class="wcard-desc">Boucle depuis Threipmuir Reservoir (20 min en voiture). Turnhouse Hill, Carnethy Hill, <b>Scald Law (579 m)</b>, East &amp; West Kip. Terrain herbeux, passages raides. Vues sur le Firth of Forth.</p>
-                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/lothian/pentland-hills.shtml" target="_blank">Walkhighlands &rarr;</a>
-                </div>
-                <div class="wcard" data-diff="facile" onclick="showWalk('arthurs')">
-                    <div class="wcard-head">
-                        <h4>Arthur's Seat</h4>
-                        <span class="badge facile">facile</span>
-                        <span class="who tous">tous</span>
+                </details>
+                <details class="wcard" data-diff="facile">
+                    <summary onclick="showWalk('arthurs')">
+                        <div class="wcard-head">
+                            <h4>Arthur's Seat</h4>
+                            <span class="badge facile">facile</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">5 km &bull; 250 m D+ &bull; 1h30 &bull; gratuit</p>
+                        <p class="wcard-desc">Volcan éteint, 251 m. Panorama 360° sur la ville, la mer et les collines du Fife.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/arthurs-seat.jpg" alt="Arthur's Seat">
+                        <p>Ancien volcan au cœur d'Édimbourg, vieux de 340 millions d'années. Du sommet (251 m), vue à 360° : le château, la vieille ville, le Firth of Forth, les collines du Fife. Deux itinéraires : par <b>Dunsapie Loch</b> (pente douce, sentier large) ou par le <b>flanc sud depuis Holyrood</b> (plus raide, 30 min de montée directe). Le parc autour est magnifique : falaises de Salisbury Crags, St Margaret's Loch. Idéal le soir d'arrivée pour le coucher de soleil.</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Holyrood Park, accès libre et gratuit.<br>
+                            <b>Terrain :</b> Sentier balisé, raide par endroits.<br>
+                            <b>Astuce :</b> Prévoir coupe-vent au sommet, même en août.
+                        </div>
                     </div>
-                    <p class="wcard-stats">5 km &bull; 250 m D+ &bull; 1h30</p>
-                    <p class="wcard-desc">Volcan éteint, 251 m. Vue 360° sur la ville et la mer. Montée par Dunsapie Loch (douce) ou flanc sud (raide, 30 min). Soir d'arrivée idéal.</p>
-                </div>
+                </details>
+                <details class="wcard" data-diff="facile">
+                    <summary onclick="showWalk('arthurs')">
+                        <div class="wcard-head">
+                            <h4>Royal Botanic Garden</h4>
+                            <span class="badge facile">facile</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">Balade &bull; 1-2h &bull; gratuit (serres : 7,50&pound;/adulte)</p>
+                        <p class="wcard-desc">28 hectares de jardins. Serres victoriennes, arboretum, vue sur la ville.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <p>Fondé en 1670, l'un des plus anciens jardins botaniques au monde. 28 hectares de pelouses, rocailles, et une collection de rhododendrons spectaculaire en été. Les <b>serres victoriennes</b> abritent des plantes tropicales, un palmier de 200 ans, et une serre tempérée (7,50&pound;/adulte, gratuit &lt;15 ans). Depuis <b>Inverleith House</b>, panorama sur la vieille ville et le château. Calme, hors des sentiers touristiques.</p>
+                        <div class="wcard-tips">
+                            <b>Accès :</b> Inverleith Row, 20 min à pied depuis le centre. Entrée jardin gratuite.<br>
+                            <b>Horaires :</b> 10h-18h en août.<br>
+                            <b>Serres :</b> 7,50&pound;/adulte, gratuit &lt;15 ans.
+                        </div>
+                    </div>
+                </details>
             </div>
 
             <h3>Hébergement</h3>
-            <div class="lodging-pick">
-                <a href="https://grassmarkethotel.co.uk/rooms/" target="_blank">
-                    <img src="img/lodging-grassmarket-hotel.jpg" alt="">
-                    <div class="lp-body">
-                        <h4>The Grassmarket Hotel</h4>
-                        <p>Au pied du château. Chambres famille. Petit-déjeuner inclus.</p>
-                    </div>
-                </a>
+            <div class="lodging-grid">
+                <div class="lodging-card">
+                    <a href="https://grassmarkethotel.co.uk/rooms/" target="_blank">
+                        <img src="img/lodging-grassmarket-hotel.jpg" alt="">
+                        <div class="lc-body">
+                            <h4>The Grassmarket Hotel</h4>
+                            <p class="lc-type">Hôtel indépendant &bull; Old Town</p>
+                            <p class="lc-desc">Bâtiment historique sur la plus vieille place marchande d'Édimbourg, au pied du château. 42 chambres, familiales disponibles. Petit-déjeuner écossais complet inclus. Pas une chaîne — tenu par une famille locale depuis 2009.</p>
+                            <p class="lc-desc"><b>~160-220&pound;/nuit</b> chambre familiale en août.</p>
+                            <span class="lc-cta">Voir chambres &rarr;</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </section>
 
         <!-- ===== GLEN COE ===== -->
         <section class="panel" id="glencoe" data-region="glencoe">
-            <img class="panel-img" src="img/glencoe-valley.jpg" alt="">
+            <div class="panel-photos">
+                <img src="img/glencoe-valley.jpg" alt="">
+                <img src="img/buachaille.jpg" alt="">
+                <img src="img/glencoe-corrie.jpg" alt="">
+            </div>
             <span class="etape">Étape 2</span>
             <h2>Glen Coe &amp; les Highlands</h2>
             <p class="panel-dates">13 &ndash; 16 août &bull; 3 nuits</p>
@@ -648,175 +751,331 @@
 
             <h3>Randonnées</h3>
             <div class="walk-grid">
-                <div class="wcard" data-diff="sportif" onclick="showWalk('bidean')">
-                    <div class="wcard-head">
-                        <h4>Bidean nam Bian</h4>
-                        <span class="badge sportif">sportif</span>
-                        <span class="who tous">tous</span>
+                <details class="wcard" data-diff="sportif">
+                    <summary onclick="showWalk('bidean')">
+                        <div class="wcard-head">
+                            <h4>Bidean nam Bian</h4>
+                            <span class="badge sportif">sportif</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">14 km &bull; 1385 m D+ &bull; 6-7h &bull; parking gratuit A82</p>
+                        <p class="wcard-desc">Point culminant d'Argyll (1150 m). 2 Munros. Course reine de Glen Coe.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/glencoe-corrie.jpg" alt="Coire nan Lochan, Bidean nam Bian">
+                        <p>La course reine de Glen Coe et le point culminant du comté d'Argyll (1150 m). <b>Deux Munros en une journée</b> : Stob Coire Sgreamhach (1072 m) et Bidean nam Bian. L'itinéraire classique remonte la <b>Lost Valley</b> (Coire Gabhail), vallée suspendue cachée entre les Three Sisters, puis gravit les pierriers raides vers la crête. Traversée aérienne jusqu'au sommet de Bidean, puis descente par <b>Stob Coire nan Lochan</b> (1115 m) avec vue plongeante sur le Glen.</p>
+                        <p>Terrain alpin : pierriers instables, passages de scramble facile (grade 1), crêtes exposées au vent. Par brouillard, l'orientation est complexe.</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Parking Three Sisters, A82. Gratuit.<br>
+                            <b>Horaire :</b> Départ 7h-8h. Journée complète.<br>
+                            <b>Équipement :</b> Carte OS, boussole, couches chaudes pour la crête, bâtons utiles.<br>
+                            <b>Météo :</b> Reporter si brouillard bas ou vent fort en altitude.
+                        </div>
+                        <a class="wcard-link" href="https://www.walkhighlands.co.uk/fortwilliam/bideannambian.shtml" target="_blank">Walkhighlands &rarr;</a>
                     </div>
-                    <p class="wcard-stats">14 km &bull; 1385 m D+ &bull; 6-7h</p>
-                    <p class="wcard-desc">Point culminant d'Argyll (1150 m). <b>2 Munros.</b> Montée par la Lost Valley, crête vers Bidean, descente par Stob Coire nan Lochan. Pierriers, scramble facile. Carte et boussole indispensables.</p>
-                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/fortwilliam/bideannambian.shtml" target="_blank">Walkhighlands &rarr;</a>
-                </div>
-                <div class="wcard" data-diff="moyen" onclick="showWalk('devils')">
-                    <div class="wcard-head">
-                        <h4>Devil's Staircase &mdash; WHW</h4>
-                        <span class="badge moyen">moyen</span>
-                        <span class="who tous">tous</span>
+                </details>
+                <details class="wcard" data-diff="moyen">
+                    <summary onclick="showWalk('devils')">
+                        <div class="wcard-head">
+                            <h4>Devil's Staircase &mdash; WHW</h4>
+                            <span class="badge moyen">moyen</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">8 km A/R au col &bull; 540 m D+ &bull; 3-4h &bull; parking gratuit</p>
+                        <p class="wcard-desc">Col panoramique du West Highland Way (550 m). Vue sur le Ben Nevis et Buachaille Etive Mòr.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/buachaille.jpg" alt="Buachaille Etive Mòr vue depuis le Devil's Staircase">
+                        <p>Le col le plus célèbre du West Highland Way, à 550 m d'altitude. Le sentier monte en lacets réguliers depuis Kingshouse — d'où le nom <b>«l'escalier du diable»</b>. Du col, panorama exceptionnel : le <b>Ben Nevis</b> (plus haut sommet de Grande-Bretagne), <b>Buachaille Etive Mòr</b> en pleine face, et le Blackwater Reservoir en contrebas.</p>
+                        <p>Sentier WHW bien balisé et entretenu, aucune difficulté technique. Aller-retour depuis Kingshouse : 8 km, 3-4h. Option : continuer la descente vers Kinlochleven (14,5 km au total, navette retour nécessaire).</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Kingshouse Hotel (parking, café, repas). Gratuit.<br>
+                            <b>Sentier :</b> WHW balisé, bon chemin. Accessible à tous.<br>
+                            <b>Astuce :</b> Le pub du Kingshouse est parfait pour une bière au retour.
+                        </div>
+                        <a class="wcard-link" href="https://www.walkhighlands.co.uk/fortwilliam/kingshouse-kinlochleven.shtml" target="_blank">Walkhighlands &rarr;</a>
                     </div>
-                    <p class="wcard-stats">8 km A/R au col &bull; 540 m D+ &bull; 3-4h</p>
-                    <p class="wcard-desc">Col à 550 m, point culminant du West Highland Way. <b>Vue sur le Ben Nevis et Buachaille Etive Mòr.</b> Bon sentier balisé. Aller-retour depuis Kingshouse, ou traversée complète vers Kinlochleven (14,5 km).</p>
-                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/fortwilliam/kingshouse-kinlochleven.shtml" target="_blank">Walkhighlands &rarr;</a>
-                </div>
-                <div class="wcard" data-diff="moyen" onclick="showWalk('lost-valley')">
-                    <div class="wcard-head">
-                        <h4>Lost Valley (Coire Gabhail)</h4>
-                        <span class="badge moyen">moyen</span>
-                        <span class="who tous">tous</span>
+                </details>
+                <details class="wcard" data-diff="moyen">
+                    <summary onclick="showWalk('lost-valley')">
+                        <div class="wcard-head">
+                            <h4>Lost Valley (Coire Gabhail)</h4>
+                            <span class="badge moyen">moyen</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">4 km &bull; 335 m D+ &bull; 2-3h &bull; parking gratuit A82</p>
+                        <p class="wcard-desc">Vallée cachée entre les Three Sisters. Court mais intense et spectaculaire.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/glencoe-valley.jpg" alt="Glen Coe — approche de la Lost Valley">
+                        <p><b>Coire Gabhail</b> en gaélique, la «vallée cachée» où le clan MacDonald dissimulait son bétail volé. Coincée entre deux des Three Sisters, cette vallée suspendue est <b>invisible depuis le Glen</b>. Le sentier descend d'abord vers la rivière Coe, la traverse (pierres de gué, glissantes par temps humide), puis remonte raide entre les rochers. Scramble léger dans les blocs de l'éboulement, puis soudain la vallée s'ouvre : un <b>plateau herbeux et plat suspendu à 350 m</b>, encadré de parois verticales. L'un des endroits les plus atmosphériques d'Écosse.</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Parking Three Sisters, A82 (même que Bidean). Gratuit.<br>
+                            <b>Terrain :</b> Traversée de rivière, pierres glissantes. Chaussures de rando obligatoires.<br>
+                            <b>Combinable :</b> Peut servir d'approche pour Bidean (continuer vers la crête).
+                        </div>
+                        <a class="wcard-link" href="https://www.walkhighlands.co.uk/fortwilliam/lostvalley.shtml" target="_blank">Walkhighlands &rarr;</a>
                     </div>
-                    <p class="wcard-stats">4 km &bull; 335 m D+ &bull; 2-3h</p>
-                    <p class="wcard-desc">Vallée cachée entre les Three Sisters. Sentier raide et rocheux, scramble léger, puis vallée suspendue spectaculaire. Court mais intense.</p>
-                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/fortwilliam/lostvalley.shtml" target="_blank">Walkhighlands &rarr;</a>
-                </div>
-                <div class="wcard" data-diff="facile" onclick="showWalk('lochan')">
-                    <div class="wcard-head">
-                        <h4>Glencoe Lochan + Signal Rock</h4>
-                        <span class="badge facile">facile</span>
-                        <span class="who tous">tous</span>
+                </details>
+                <details class="wcard" data-diff="facile">
+                    <summary onclick="showWalk('lochan')">
+                        <div class="wcard-head">
+                            <h4>Glencoe Lochan + Signal Rock</h4>
+                            <span class="badge facile">facile</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">5 km &bull; 50 m D+ &bull; 1h30 &bull; parking gratuit</p>
+                        <p class="wcard-desc">Lac en forêt + sentier historique le long de la rivière Coe. Plat, calme, familial.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/glencoe-lochan.jpg" alt="Glencoe Lochan">
+                        <p>Un lac artificiel niché dans une forêt de pins et de mélèzes, créé au XIXe siècle par Lord Strathcona pour rappeler le Canada à son épouse. Le sentier fait le tour du lac en sous-bois (plat, bancs réguliers, très calme). On enchaîne avec le sentier vers <b>Signal Rock</b>, le long de la rivière Coe — c'est d'ici que le signal du <b>massacre de Glencoe (1692)</b> aurait été donné. Parfait pour un soir d'arrivée, un jour de repos, ou après la pluie quand les sommets sont dans les nuages.</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Parking Glencoe Village. Gratuit.<br>
+                            <b>Sentier :</b> Plat, en partie accessible (Greenway). Bancs.
+                        </div>
                     </div>
-                    <p class="wcard-stats">5 km &bull; 50 m D+ &bull; 1h30</p>
-                    <p class="wcard-desc">Boucle autour du lac en forêt + sentier vers Signal Rock le long de la rivière Coe. Bancs, plat. Balade familiale, fin de journée, ou jour de repos.</p>
-                </div>
+                </details>
             </div>
 
             <div class="option-note">
-                <b>Option :</b> <b>Buachaille Etive Mòr</b> (13 km, 1110 m D+, 7-9h, 2 Munros) &mdash; la montagne la plus photographiée d'Écosse. Alternative à Bidean pour une 2e journée sportive.
+                <b>Option :</b> <b>Buachaille Etive Mòr</b> (13 km, 1110 m D+, 7-9h, 2 Munros) — la montagne la plus photographiée d'Écosse. Montée par Coire na Tulaich (pierrier raide), traversée de crête spectaculaire. Alternative à Bidean pour une 2e journée sportive.
                 <a href="https://www.walkhighlands.co.uk/fortwilliam/buachailleetivemor.shtml" target="_blank">Walkhighlands &rarr;</a>
             </div>
 
             <h3>Hébergement</h3>
-            <div class="lodging-pick">
-                <a href="https://www.ardnohouse.co.uk/" target="_blank">
-                    <img src="img/lodging-ardno-house.jpg" alt="">
-                    <div class="lp-body">
-                        <h4>Ardno House B&amp;B &mdash; Glencoe</h4>
-                        <p>Séchoir randonneurs. Petit-déjeuner. Vue montagnes. Départ sentiers à pied.</p>
-                    </div>
-                </a>
+            <div class="lodging-grid">
+                <div class="lodging-card">
+                    <a href="https://www.ardnohouse.co.uk/" target="_blank">
+                        <img src="img/lodging-ardno-house.jpg" alt="">
+                        <div class="lc-body">
+                            <h4>Ardno House B&amp;B</h4>
+                            <p class="lc-type">B&amp;B de randonneurs &bull; Glencoe Village</p>
+                            <p class="lc-desc">Maison familiale avec séchoir pour les chaussures et vêtements de rando. 4 chambres (double, twin, familiale). Petit-déjeuner complet. Vue sur les montagnes. Départ des sentiers à pied depuis le jardin. Tenu par des marcheurs — ils connaissent tous les itinéraires.</p>
+                            <p class="lc-desc"><b>~120-160&pound;/nuit</b> chambre double en août.</p>
+                            <span class="lc-cta">Voir chambres &rarr;</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="lodging-card">
+                    <a href="https://www.clachaigholidays.com/cottages/camus-bhan/" target="_blank">
+                        <img src="img/lodging-camus-bhan.jpg" alt="">
+                        <div class="lc-body">
+                            <h4>Camus Bhan &mdash; Clachaig Holidays</h4>
+                            <p class="lc-type">Croft rénové &bull; Loch Leven</p>
+                            <p class="lc-desc">Ancienne ferme traditionnelle (croft) rénovée avec goût. 3 chambres, cheminée, terrasse sur le Loch Leven. Cuisine autonome. Le pub <b>Clachaig Inn</b> à proximité — le repaire des grimpeurs depuis 1840, bières locales, repas copieux. L'hébergement le plus atmosphérique du Glen.</p>
+                            <p class="lc-desc"><b>~180-250&pound;/nuit</b> le croft en août.</p>
+                            <span class="lc-cta">Disponibilités &rarr;</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </section>
 
         <!-- ===== ÎLE DE SKYE ===== -->
         <section class="panel" id="skye" data-region="skye">
-            <img class="panel-img" src="img/quiraing.jpg" alt="">
+            <div class="panel-photos">
+                <img src="img/quiraing.jpg" alt="">
+                <img src="img/eilean-donan.jpg" alt="">
+                <img src="img/portree.jpg" alt="">
+            </div>
             <span class="etape">Étape 3</span>
             <h2>Île de Skye</h2>
             <p class="panel-dates">16 &ndash; 19 août &bull; 3 nuits</p>
-            <p class="panel-intro">Formations rocheuses spectaculaires, piscines turquoise, falaises maritimes. Arrêt Eilean Donan Castle sur le trajet. Haute saison : partir tôt le matin.</p>
+            <p class="panel-intro">Formations rocheuses spectaculaires, piscines turquoise, falaises maritimes. Arrêt Eilean Donan Castle sur le trajet (entrée : 11&pound;/adulte, gratuit &lt;5 ans). Haute saison : partir tôt le matin.</p>
 
             <h3>Randonnées</h3>
             <div class="walk-grid">
-                <div class="wcard" data-diff="sportif" onclick="showWalk('blabheinn')">
-                    <div class="wcard-head">
-                        <h4>Blà Bheinn (Blaven)</h4>
-                        <span class="badge sportif">sportif</span>
-                        <span class="who tous">tous</span>
+                <details class="wcard" data-diff="sportif">
+                    <summary onclick="showWalk('blabheinn')">
+                        <div class="wcard-head">
+                            <h4>Blà Bheinn (Blaven)</h4>
+                            <span class="badge sportif">sportif</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">8,2 km &bull; 940 m D+ &bull; 5-6h &bull; parking gratuit</p>
+                        <p class="wcard-desc">Munro isolé (928 m), le plus accessible des Cuillin. Vue sur toute la crête noire.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <p>Le Munro de Skye par excellence. Isolé des Cuillin noirs, <b>Blà Bheinn (928 m)</b> offre le meilleur point de vue sur toute la crête : du Sgùrr nan Gillean au Sgùrr Alasdair, les 12 sommets en enfilade. Départ du parking au bord du <b>Loch Slapin</b> (route B8083). Le sentier suit le torrent Allt na Dunaiche sur un bon chemin rénové, puis le terrain change : pierrier raide dans un large couloir d'éboulis, scramble léger au sommet. La récompense est l'un des plus beaux panoramas d'Écosse. Pas de matériel d'alpinisme nécessaire, mais c'est une vraie course de montagne.</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Parking B8083, Loch Slapin. Route single track. Gratuit.<br>
+                            <b>Terrain :</b> Bon sentier puis pierrier raide, scramble léger.<br>
+                            <b>Météo :</b> Par temps clair uniquement — l'intérêt est la vue sur les Cuillin.
+                        </div>
+                        <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/blabheinn.shtml" target="_blank">Walkhighlands &rarr;</a>
                     </div>
-                    <p class="wcard-stats">8,2 km &bull; 940 m D+ &bull; 5-6h</p>
-                    <p class="wcard-desc"><b>Munro isolé (928 m), le plus accessible des Cuillin.</b> Vue exceptionnelle sur toute la crête des Cuillin noirs et Loch Slapin. Bon sentier puis pierrier raide, scramble léger au sommet.</p>
-                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/blabheinn.shtml" target="_blank">Walkhighlands &rarr;</a>
-                </div>
-                <div class="wcard" data-diff="moyen" onclick="showWalk('quiraing')">
-                    <div class="wcard-head">
-                        <h4>Quiraing &mdash; boucle</h4>
-                        <span class="badge moyen">moyen</span>
-                        <span class="who tous">tous</span>
+                </details>
+                <details class="wcard" data-diff="moyen">
+                    <summary onclick="showWalk('quiraing')">
+                        <div class="wcard-head">
+                            <h4>Quiraing &mdash; boucle</h4>
+                            <span class="badge moyen">moyen</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">6,8 km &bull; 380 m D+ &bull; 2h30-3h &bull; parking gratuit</p>
+                        <p class="wcard-desc">Plus grand glissement de terrain d'Europe. Paysage lunaire, aiguilles, plateaux cachés.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/quiraing.jpg" alt="Le Quiraing">
+                        <p>Le plus grand glissement de terrain actif d'Europe — la montagne bouge encore de quelques centimètres par an. La boucle traverse un paysage lunaire : <b>The Needle</b> (aiguille de 37 m), <b>The Prison</b> (colonnes de basalte), et surtout <b>The Table</b>, un plateau herbeux parfaitement plat caché derrière les aiguilles — les locaux y jouaient au shinty. Sentier bien tracé mais terrain instable par endroits. Lumière extraordinaire le matin tôt. Site de tournage de nombreux films (Macbeth, Stardust, 47 Ronin).</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Parking au col de la route. Petit, arriver avant 8h en août. Gratuit.<br>
+                            <b>Sens :</b> Antihoraire (montée face aux aiguilles).<br>
+                            <b>Combinable :</b> Avec Old Man of Storr le même jour (30 min de route).
+                        </div>
+                        <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/quiraing.shtml" target="_blank">Walkhighlands &rarr;</a>
                     </div>
-                    <p class="wcard-stats">6,8 km &bull; 380 m D+ &bull; 2h30-3h</p>
-                    <p class="wcard-desc">Le plus grand glissement de terrain d'Europe. Paysage lunaire : aiguilles, plateaux cachés (The Table, The Prison, The Needle). Sentier bien tracé.</p>
-                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/quiraing.shtml" target="_blank">Walkhighlands &rarr;</a>
-                </div>
-                <div class="wcard" data-diff="facile" onclick="showWalk('storr')">
-                    <div class="wcard-head">
-                        <h4>Old Man of Storr</h4>
-                        <span class="badge facile">facile</span>
-                        <span class="who tous">tous</span>
+                </details>
+                <details class="wcard" data-diff="facile">
+                    <summary onclick="showWalk('storr')">
+                        <div class="wcard-head">
+                            <h4>Old Man of Storr</h4>
+                            <span class="badge facile">facile</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">3,7 km A/R &bull; 300 m D+ &bull; 1h30 &bull; parking 5&pound;</p>
+                        <p class="wcard-desc">Aiguille rocheuse la plus iconique de Skye (48 m). Sentier aménagé.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/old-man-storr.jpg" alt="Old Man of Storr">
+                        <p>L'aiguille rocheuse la plus photographiée de Skye : 48 m de haut, visible depuis la route. Le sentier aménagé (rénové récemment, marches en pierre) monte raide mais court vers le sanctuaire de rochers. On ne grimpe pas le pinnacle lui-même (escalade technique), mais on marche entre les formations pour des <b>vues vertigineuses</b> sur la baie de Portree, Raasay, et par temps clair, les montagnes du continent. Site le plus visité de Skye.</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Parking payant sur la A855, 7 km au nord de Portree. <b>5&pound;</b>.<br>
+                            <b>Sentier :</b> Aménagé, marches en pierre. Raide mais court.<br>
+                            <b>Astuce :</b> Arriver tôt ou en fin d'après-midi pour éviter la foule.
+                        </div>
+                        <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/oldmanofstorr.shtml" target="_blank">Walkhighlands &rarr;</a>
                     </div>
-                    <p class="wcard-stats">3,7 km A/R &bull; 300 m D+ &bull; 1h30</p>
-                    <p class="wcard-desc">Aiguille rocheuse la plus connue de Skye (48 m). Panorama 360° sur l'île et les Hébrides. Sentier aménagé. Combinable avec le Quiraing (30 min de route).</p>
-                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/oldmanofstorr.shtml" target="_blank">Walkhighlands &rarr;</a>
-                </div>
-                <div class="wcard" data-diff="facile" onclick="showWalk('fairy-pools')">
-                    <div class="wcard-head">
-                        <h4>Fairy Pools</h4>
-                        <span class="badge facile">facile</span>
-                        <span class="who tous">tous</span>
+                </details>
+                <details class="wcard" data-diff="facile">
+                    <summary onclick="showWalk('fairy-pools')">
+                        <div class="wcard-head">
+                            <h4>Fairy Pools</h4>
+                            <span class="badge facile">facile</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">2,4 km A/R &bull; plat &bull; 1h &bull; parking gratuit</p>
+                        <p class="wcard-desc">Piscines naturelles turquoise. Baignade possible (~12°C).</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/fairy-pools.jpg" alt="Fairy Pools">
+                        <p>Une succession de piscines naturelles d'eau cristalline au pied des Cuillin noirs. L'eau est d'un <b>turquoise irréel</b> grâce au quartzite du lit de la rivière Brittle. On remonte le long des cascades sur un sentier facile. Baignade possible — l'eau est à environ <b>12°C</b> même en août. Le cadre est saisissant : les bassins turquoise au premier plan, les sombres Cuillin en arrière-plan.</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Parking Fairy Pools (route single track depuis Carbost). Gratuit.<br>
+                            <b>Baignade :</b> Apporter maillot et serviettes. 12°C = froid mais vivifiant.<br>
+                            <b>Astuce :</b> Arriver avant 9h en août pour le calme. 25 min de route depuis Portree.
+                        </div>
+                        <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/fairy-pools.shtml" target="_blank">Walkhighlands &rarr;</a>
                     </div>
-                    <p class="wcard-stats">2,4 km A/R &bull; plat &bull; 1h</p>
-                    <p class="wcard-desc">Piscines naturelles turquoise au pied des Cuillin. Baignade possible (~12°C). Arriver avant 9h en août.</p>
-                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/fairy-pools.shtml" target="_blank">Walkhighlands &rarr;</a>
-                </div>
-                <div class="wcard" data-diff="facile" onclick="showWalk('neist')">
-                    <div class="wcard-head">
-                        <h4>Neist Point</h4>
-                        <span class="badge facile">facile</span>
-                        <span class="who tous">tous</span>
+                </details>
+                <details class="wcard" data-diff="facile">
+                    <summary onclick="showWalk('neist')">
+                        <div class="wcard-head">
+                            <h4>Neist Point</h4>
+                            <span class="badge facile">facile</span>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">2,8 km A/R &bull; 100 m D+ &bull; 1h &bull; parking gratuit</p>
+                        <p class="wcard-desc">Phare à la pointe ouest. Coucher de soleil exceptionnel. Phoques, dauphins.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/neist-point.jpg" alt="Neist Point">
+                        <p>La pointe la plus à l'ouest de Skye, avec son <b>phare blanc accroché aux falaises</b>. Le sentier descend par des escaliers et un chemin côtier jusqu'au phare (automatisé depuis 1990). Les falaises sont vertigineuses, la vue sur les <b>Hébrides extérieures</b> immense. C'est LE spot pour le coucher de soleil en août — le soleil plonge dans l'Atlantique vers 21h. Possibilité d'observer des <b>phoques gris</b> sur les rochers, des <b>dauphins</b> au large, et parfois des <b>pygargues à queue blanche</b>.</p>
+                        <div class="wcard-tips">
+                            <b>Départ :</b> Parking au bout de la route (single track, 30 min depuis Dunvegan). Gratuit.<br>
+                            <b>Terrain :</b> Escaliers raides, sentier côtier. Vent fréquent.<br>
+                            <b>À prévoir :</b> Jumelles pour la faune. Couche chaude. Rester loin des bords de falaise.
+                        </div>
+                        <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/neist-point.shtml" target="_blank">Walkhighlands &rarr;</a>
                     </div>
-                    <p class="wcard-stats">2,8 km A/R &bull; 100 m D+ &bull; 1h</p>
-                    <p class="wcard-desc">Phare à la pointe ouest de Skye. Escaliers et sentier côtier. Coucher de soleil exceptionnel (jour jusqu'à 21h en août). Phoques et dauphins possibles.</p>
-                    <a class="wcard-link" href="https://www.walkhighlands.co.uk/skye/neist-point.shtml" target="_blank">Walkhighlands &rarr;</a>
-                </div>
+                </details>
             </div>
 
             <h3>Hébergement</h3>
-            <div class="lodging-pick">
-                <a href="https://www.stratheyrecottage.co.uk/" target="_blank">
-                    <img src="img/lodging-stratheyre.jpg" alt="">
-                    <div class="lp-body">
-                        <h4>Stratheyre Cottage &mdash; Portree</h4>
-                        <p>Cottage pierre, 3 chambres, poêle à bois, vue mer. 5 min de Portree.</p>
-                    </div>
-                </a>
+            <div class="lodging-grid">
+                <div class="lodging-card">
+                    <a href="https://www.stratheyrecottage.co.uk/" target="_blank">
+                        <img src="img/lodging-stratheyre.jpg" alt="">
+                        <div class="lc-body">
+                            <h4>Stratheyre Cottage</h4>
+                            <p class="lc-type">Cottage en pierre &bull; 5 min de Portree</p>
+                            <p class="lc-desc">Cottage traditionnel en pierre, 3 chambres king (6 couchages). Poêle à bois dans le salon, vue mer sur la baie de Portree. Cuisine équipée, jardin privé. Rénové avec goût — poutres apparentes, murs en pierre. À 5 min en voiture de Portree pour les restaurants et courses.</p>
+                            <p class="lc-desc"><b>~200-280&pound;/nuit</b> le cottage en août.</p>
+                            <span class="lc-cta">Disponibilités &rarr;</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </section>
 
         <!-- ===== GLASGOW ===== -->
         <section class="panel" id="glasgow" data-region="glasgow">
-            <img class="panel-img" src="img/glasgow-uni.jpg" alt="">
+            <div class="panel-photos">
+                <img src="img/kelvingrove.jpg" alt="">
+                <img src="img/glasgow-uni.jpg" alt="">
+            </div>
             <span class="etape">Étape 4</span>
             <h2>Glasgow</h2>
             <p class="panel-dates">19 &ndash; 21 août &bull; 2 nuits</p>
-            <p class="panel-intro">Musées gratuits, architecture victorienne, quartier West End. Restitution du véhicule à l'arrivée.</p>
+            <p class="panel-intro">Musées gratuits, architecture victorienne, quartier West End animé. Restitution du véhicule à l'arrivée. Tout à pied.</p>
 
             <h3>À voir</h3>
             <div class="walk-grid">
-                <div class="wcard" data-diff="facile" onclick="showWalk('kelvingrove')">
-                    <div class="wcard-head">
-                        <h4>Kelvingrove Museum</h4>
-                        <span class="who tous">tous</span>
+                <details class="wcard" data-diff="facile">
+                    <summary onclick="showWalk('kelvingrove')">
+                        <div class="wcard-head">
+                            <h4>Kelvingrove Museum</h4>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">Gratuit &bull; 2-3h</p>
+                        <p class="wcard-desc">22 galeries : Dalí, Rembrandt, fossiles, armures. Spitfire au plafond. Orgue à 13h.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/kelvingrove.jpg" alt="Kelvingrove Museum">
+                        <p>Un des meilleurs musées gratuits de Grande-Bretagne. 22 galeries réparties sur 3 étages : art (Dalí, Rembrandt, <b>Mackintosh</b>), histoire naturelle, armures médiévales. Un <b>Spitfire</b> est suspendu au plafond de la salle centrale. L'orgue est joué quotidiennement à 13h — concert gratuit, acoustique exceptionnelle. Le bâtiment lui-même (grès rouge, 1901) est spectaculaire.</p>
+                        <div class="wcard-tips">
+                            <b>Entrée :</b> Gratuite. Dons bienvenus.<br>
+                            <b>Horaires :</b> Lun-Jeu &amp; Sam 10h-17h, Ven &amp; Dim 11h-17h.<br>
+                            <b>Orgue :</b> Concert gratuit tous les jours à 13h.
+                        </div>
                     </div>
-                    <p class="wcard-stats">Gratuit &bull; 2-3h</p>
-                    <p class="wcard-desc">22 galeries : Dalí, Rembrandt, fossiles, armures. Spitfire suspendu au plafond. Orgue joué à 13h. Un des meilleurs musées gratuits de Grande-Bretagne.</p>
-                </div>
-                <div class="wcard" data-diff="facile" onclick="showWalk('university')">
-                    <div class="wcard-head">
-                        <h4>Kelvingrove Park + Université</h4>
-                        <span class="who tous">tous</span>
+                </details>
+                <details class="wcard" data-diff="facile">
+                    <summary onclick="showWalk('university')">
+                        <div class="wcard-head">
+                            <h4>Kelvingrove Park + Université</h4>
+                            <span class="who tous">tous</span>
+                        </div>
+                        <p class="wcard-stats">3 km &bull; plat &bull; 1-2h &bull; gratuit</p>
+                        <p class="wcard-desc">Rivière Kelvin, Université néo-gothique 1870 (Poudlard), jardin botanique.</p>
+                    </summary>
+                    <div class="wcard-detail">
+                        <img class="wcard-photo" src="img/glasgow-uni.jpg" alt="Université de Glasgow">
+                        <p>Promenade le long de la rivière Kelvin, puis montée vers l'<b>Université de Glasgow</b> — le bâtiment Gilbert Scott (néo-gothique, 1870) est souvent comparé à Poudlard. Cloître, tour, quadrilatère : tout est accessible et gratuit. Le <b>Hunterian Museum</b> (gratuit) à l'intérieur vaut le détour. Continuer vers le <b>Jardin Botanique</b> (gratuit, serres victoriennes spectaculaires) puis redescendre vers <b>Byres Road</b> pour les restaurants, cafés, librairies d'occasion et friperies.</p>
+                        <div class="wcard-tips">
+                            <b>Université :</b> Accès libre et gratuit. Hunterian Museum gratuit.<br>
+                            <b>Jardin Botanique :</b> Gratuit. Serres Kibble Palace remarquables.<br>
+                            <b>Byres Road :</b> Ashton Lane pour dîner (ruelles pavées, guirlandes lumineuses).
+                        </div>
                     </div>
-                    <p class="wcard-stats">3 km &bull; plat &bull; 1h</p>
-                    <p class="wcard-desc">Promenade le long de la rivière Kelvin. Université de Glasgow : bâtiment néo-gothique 1870, évoque Poudlard. Jardin botanique à proximité.</p>
-                </div>
+                </details>
             </div>
 
             <h3>Hébergement</h3>
-            <div class="lodging-pick">
-                <a href="https://www.alamoguesthouse.com" target="_blank">
-                    <img src="img/lodging-alamo.jpg" alt="">
-                    <div class="lp-body">
-                        <h4>The Alamo Guest House</h4>
-                        <p>B&amp;B de caractère, West End. Petit-déjeuner. À pied de Kelvingrove.</p>
-                    </div>
-                </a>
+            <div class="lodging-grid">
+                <div class="lodging-card">
+                    <a href="https://www.alamoguesthouse.com" target="_blank">
+                        <img src="img/lodging-alamo.jpg" alt="">
+                        <div class="lc-body">
+                            <h4>The Alamo Guest House</h4>
+                            <p class="lc-type">B&amp;B victorien &bull; West End</p>
+                            <p class="lc-desc">Maison victorienne de caractère dans le West End. Chambres double, twin et famille, toutes décorées individuellement. Petit-déjeuner écossais complet. Salon avec cheminée. À pied de Kelvingrove (5 min), Byres Road (3 min) et Université (10 min). Tenu par le même propriétaire depuis 20 ans — recommandations locales au petit-déjeuner.</p>
+                            <p class="lc-desc"><b>~110-150&pound;/nuit</b> chambre double en août.</p>
+                            <span class="lc-cta">Voir chambres &rarr;</span>
+                        </div>
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -842,12 +1101,16 @@
                     <a href="https://www.walkhighlands.co.uk/" target="_blank">Walkhighlands</a> &mdash; fiches et traces GPS.</p>
                 </div>
                 <div class="tip">
-                    <h4>Budget indicatif</h4>
-                    <p>Hébergement : 150-300&pound;/nuit<br>
+                    <h4>Budget indicatif (4 pers.)</h4>
+                    <p>Hébergement : 120-280&pound;/nuit<br>
                     Location véhicule 11j : 500-700&pound;<br>
                     Carburant : ~150&pound;<br>
-                    Alimentation : 60-100&pound;/jour (4 pers.)<br>
-                    Entrées : musées gratuits, châteaux ~20&pound;/adulte</p>
+                    Alimentation : 60-100&pound;/jour<br>
+                    Château Édimbourg : 19,50&pound;/adulte, 12,50&pound; 5-15 ans<br>
+                    Eilean Donan : 11&pound;/adulte, 7&pound; 5-15 ans<br>
+                    Musées Glasgow : gratuits<br>
+                    Parkings rando : gratuits (sauf Storr 5&pound;)<br>
+                    <b>Total estimé : ~5500-8000&pound;</b> (11 nuits, 4 pers.)</p>
                 </div>
             </div>
         </section>
